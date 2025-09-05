@@ -1,0 +1,234 @@
+/* Login profesional */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(128, 163, 233, 0.8);
+  border-radius: 16px;
+  /* min-height: 100vh; */
+  /* background: linear-gradient(135deg, #ece9e6 0%, #ffffff 100%); */
+}
+.login-box {
+  width: 400px;
+  background: rgb(190, 14, 14)222;
+  padding: 2rem 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  min-width: 340px;
+  min-height: 400px;
+  text-align: center;
+}
+.login-box h2 {
+  margin-bottom: 1.5rem;
+  color: #f0f2f3;
+  font-weight: 500;
+}
+.login-box input {
+  width: 70%;
+  padding: 0.85rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  background: #f8f9fa;
+  border: none;
+}
+.login-box button {
+  width: 50%;
+  padding: 10px;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: background 0.2s;
+}
+.login-box button:hover {
+  background: #0056b3;
+}
+.login-box p {
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+.login-box .error {
+  color: #dc3545;
+}
+.login-box .success {
+  color: #28a745;
+}
+
+/* Acciones en columna en la tabla de documentos */
+.documentos-table td.acciones-columna {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+/* Formulario de registro */
+.registro-form {
+  width: 450px;
+  height: 550px;
+  margin: 7px;
+  top: 30px;
+  background: rgba(19, 97, 211, 0.71);
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  /* gap: 1; */
+}
+
+.registro-form input {
+  width: 90%;
+  margin: 4px 0 0 10px;
+  border: none;
+  background: #f8f9fa;
+  font-size: 1rem;
+  padding: 10px;
+  /* margin-top: 10px 0; */
+  border-radius: 5px;
+  align-items: center;
+  border: 1px solid #ccc;
+  flex-direction: column;
+  align-items: center;
+  /* font-size: 1rem; */
+}
+
+.registro-form button {
+  justify-content: center;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  /* font-size: 1rem; */
+
+}
+
+.registro-form button:hover {
+  background: #0056b3;
+}
+.registro-form h2 {
+  color: #fff;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+/* Mejorar la tabla de documentos */
+.documentos-table th, .documentos-table td {
+  width: 450px;
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: left;
+  vertical-align: bottom;
+}
+
+.documentos-table th {
+  background: linear-gradient(90deg, #007bff 60%, #0056b3 100%);
+  color: #fff;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.documentos-table tr:nth-child(even) {
+  background: #f8f9fa;
+}
+.documentos-table tr:nth-child(odd) {
+  background: #e9ecef;
+}
+.documentos-table tr:hover {
+  background: #d1ecf1;
+}
+
+.documentos-table td.file-icon {
+  width: 32px;
+  text-align: center;
+}
+
+.file-icon-img {
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+}
+.documentos-table th {
+  background: #007bff;
+  color: #fff;
+}
+.documentos-table tr:nth-child(even) {
+  background: #f2f2f2;
+}
+.documentos-table tr:hover {
+  background: #e9ecef;
+}
+.documentos-btn {
+  padding: 0.3rem 0.7rem;
+  border: none;
+  border-radius: 4px;
+  margin-right: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+.documentos-btn-eliminar {
+  background: #dc3545;
+  color: #fff;
+}
+.documentos-btn-editar {
+  background: #ffc107;
+  color: #333;
+}
+.documentos-btn-descargar {
+  background: #17a2b8;
+  color: #fff;
+}
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
