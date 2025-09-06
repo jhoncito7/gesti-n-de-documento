@@ -9,6 +9,31 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = 'dfaFfDFdfDF_f_dF_df_aF_a_FafASF';
 
 // ===========================
+// ESTADÍSTICAS AVANZADAS
+// ===========================
+router.get('/estadisticas-avanzadas', (req, res) => {
+  const queries = [
+    // Documentos por usuario
+    `SELECT u.nombre AS usuario, COUNT(d.id_documento) AS total
+     FROM usuarios u
+     LEFT JOIN documentos d ON d.id_usuario = u.id_usuario
+     GROUP BY u.id_usuario` ,
+    // Documentos por extensión
+    `SELECT extension, COUNT(*) AS total FROM documentos GROUP BY extension`,
+    // Documentos por hora
+    `SELECT HOUR(fecha_hora) AS hora, COUNT(*) AS total FROM documentos GROUP BY hora ORDER BY hora`
+  ];
+  db.query(queries.join(';'), (err, results) => {
+    if (err) return res.status(500).json({ message: 'Error al obtener estadísticas avanzadas', error: err });
+    res.json({
+      porUsuario: results[0],
+      porExtension: results[1],
+      porHora: results[2]
+    });
+  });
+});
+
+// ===========================
 // REGISTRO DE USUARIO
 // ===========================
 router.post('/register', async (req, res) => {
