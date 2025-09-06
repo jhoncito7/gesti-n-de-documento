@@ -34,6 +34,24 @@ const getDocumentosConDetalles = (callback) => {
     callback(null, results);
   });
 };
+const [archivosServidor, setArchivosServidor] = useState([]);
+
+const obtenerArchivosServidor = async () => {
+    try {
+        const res = await axios.get('http://localhost:3000/api/uploads', config);
+        setArchivosServidor(res.data);
+    } catch (err) {
+        setMensaje('Error al cargar archivos del servidor');
+    }
+};
+
+useEffect(() => {
+    obtenerDocumentos();
+    obtenerUsuarios();
+    obtenerArchivosServidor();
+}, []);
+
+
 
 // Crear nuevo documento
 const createDocumento = (nombre, peso, extension, id_usuario, id_categoria, callback) => {

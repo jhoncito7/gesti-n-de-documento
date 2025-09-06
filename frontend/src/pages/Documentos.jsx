@@ -1,19 +1,27 @@
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
-// ...existing code...
 function Documentos() {
     const [documentos, setDocumentos] = useState([]);
     const [tipoFiltro, setTipoFiltro] = useState('');
     const [categorias, setCategorias] = useState([]);
     const [usuarios, setUsuarios] = useState([]);
-    const [nuevoDoc, setNuevoDoc] = useState({ categoria_id: '', usuario_id: '' });
+    const [nuevoDoc, setNuevoDoc] = useState({ categoria_id: '', usuario_id: '', descripcion: '' });
     const [archivo, setArchivo] = useState(null);
     const [mensaje, setMensaje] = useState('');
     const [editandoId, setEditandoId] = useState(null);
     const [editDoc, setEditDoc] = useState({ nombre_documento: '', categoria_id: '', extension: '' });
     const token = localStorage.getItem('token');
     const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+    // Obtener usuario logueado del token
+    let usuarioLogueado = null;
+    if (token) {
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            usuarioLogueado = payload;
+        } catch (e) {}
+    }
+    const fileInputRef = useRef();
 
     useEffect(() => {
         obtenerDocumentos();
@@ -53,24 +61,23 @@ function Documentos() {
             setMensaje('Selecciona un archivo');
             return;
         }
-        if (!nuevoDoc.usuario_id) {
-            setMensaje('Selecciona un usuario');
-            return;
-        }
-        const usuarioValido = usuarios.find(u => u.id_usuario == nuevoDoc.usuario_id);
-        if (!usuarioValido) {
-            setMensaje('El usuario no existe. Selecciona un usuario válido.');
+        // Usar usuario logueado
+        const usuario_id = usuarioLogueado?.id_usuario;
+        if (!usuario_id) {
+            setMensaje('No se pudo obtener el usuario logueado');
             return;
         }
         try {
             const formData = new FormData();
             formData.append('archivo', archivo);
             formData.append('categoria_id', nuevoDoc.categoria_id);
-            formData.append('usuario_id', nuevoDoc.usuario_id);
-            await axios.post('http://localhost:3000/api/documentos/upload', formData, config);
+            formData.append('usuario_id', usuario_id);
+            formData.append('descripcion', nuevoDoc.descripcion);
+            await axios.post('http://localhost:3000/api/documentos/uploads', formData, config);
             setMensaje('Archivo subido correctamente');
             setNuevoDoc({ categoria_id: '', usuario_id: '' });
             setArchivo(null);
+            if (fileInputRef.current) fileInputRef.current.value = '';
             obtenerDocumentos();
         } catch (err) {
             setMensaje('Error al subir archivo');
@@ -100,7 +107,7 @@ function Documentos() {
         e.preventDefault();
         try {
             await axios.put(`http://localhost:3000/api/documentos/${editandoId}`, {
-                titulo: editDoc.nombre_documento,
+                nombre_documento: editDoc.nombre_documento,
                 categoria_id: editDoc.categoria_id,
                 extension: editDoc.extension
             }, config);
@@ -134,19 +141,11 @@ function Documentos() {
                     <option value="txt">TXT</option>
                     <option value="rtf">RTF</option>
                     <option value="odt">ODT</option>
-
-                    {/* Hojas de cálculo  */}
                     <option value="xls">XLS</option>
                     <option value="xlsx">XLSX</option>
                     <option value="csv">CSV</option>
-                    
-
-                    {/*  Presentaciones  */}
                     <option value="ppt">PPT</option>
                     <option value="pptx">PPTX</option>
-                    
-
-                    {/* Imágenes  */}
                     <option value="jpg">JPG</option>
                     <option value="jpeg">JPEG</option>
                     <option value="png">PNG</option>
@@ -155,41 +154,81 @@ function Documentos() {
                     <option value="svg">SVG</option>
                     <option value="webp">WEBP</option>
                     <option value="tiff">TIFF</option>
-                    {/* Agrega más tipos si lo necesitas */}
                 </select>
             </label>
-            <form onSubmit={agregarDocumento} style={{ marginTop: '1rem', marginBottom: '2rem', background: '#f8f9fa', padding: '1rem', borderRadius: '8px', maxWidth: '600px', marginLeft: 'auto', marginRight: 'auto', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-                <h3 style={{ marginBottom: '1rem', color: '#007bff' }}>Subir nuevo archivo</h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    <select
-                        value={nuevoDoc.categoria_id}
-                        onChange={e => setNuevoDoc({ ...nuevoDoc, categoria_id: e.target.value })}
-                        style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
-                    >
-                        <option value="">Seleccione categoría</option>
-                        {categorias.map(cat => (
-                            <option key={cat.id_categoria} value={cat.id_categoria}>{cat.categoria_nombre}</option>
-                        ))}
-                    </select>
-                    <select
-                        value={nuevoDoc.usuario_id}
-                        onChange={e => setNuevoDoc({ ...nuevoDoc, usuario_id: e.target.value })}
-                        style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
-                    >
-                        <option value="">Seleccione usuario</option>
-                        {usuarios.map(u => (
-                            <option key={u.id_usuario} value={u.id_usuario}>{u.nombre} {u.apellido} ({u.usuario})</option>
-                        ))}
-                    </select>
-                    <input
-                        type="file"
-                        onChange={e => setArchivo(e.target.files[0])}
-                        style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
-                    />
-                    <button type="submit" style={{ background: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', padding: '0.5rem 1rem', fontWeight: 'bold', cursor: 'pointer' }}>Subir archivo</button>
-                </div>
-            </form>
+            <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start', marginTop: '1rem', marginBottom: '2rem' }}>
+                <form onSubmit={agregarDocumento} style={{ background: '#f8f9fa', padding: '1rem', borderRadius: '8px', maxWidth: '400px', minWidth: '320px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+                    <h3 style={{ marginBottom: '1rem', color: '#007bff' }}>Subir nuevo archivo</h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        <select
+                            value={nuevoDoc.categoria_id}
+                            onChange={e => setNuevoDoc({ ...nuevoDoc, categoria_id: e.target.value })}
+                            style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
+                        >
+                            <option value="">Seleccione categoría</option>
+                            {categorias.map(cat => (
+                                <option key={cat.id_categoria} value={cat.id_categoria}>{cat.categoria_nombre}</option>
+                            ))}
+                        </select>
+                        {/* Mostrar campo descripción solo si hay categoría seleccionada */}
+                        {nuevoDoc.categoria_id && (
+                            <input
+                                type="text"
+                                placeholder="Descripción"
+                                value={nuevoDoc.descripcion}
+                                onChange={e => setNuevoDoc({ ...nuevoDoc, descripcion: e.target.value })}
+                                style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
+                            />
+                        )}
+                        {/* El usuario logueado no puede seleccionar usuario */}
+                        {usuarioLogueado && (
+                            <input type="hidden" value={usuarioLogueado.id_usuario} />
+                        )}
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={e => setArchivo(e.target.files[0])}
+                            style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
+                        />
+                        <button type="submit" style={{ background: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', padding: '0.5rem 1rem', fontWeight: 'bold', cursor: 'pointer' }}>Subir archivo</button>
+                    </div>
+                </form>
+                {editandoId && (
+                    <form onSubmit={actualizarDocumento} style={{ background: '#f8f9fa', padding: '1rem', borderRadius: '8px', minWidth: '320px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+                        <h3>Editar documento</h3>
+                        <input
+                            type="text"
+                            placeholder="Nombre"
+                            value={editDoc.nombre_documento}
+                            onChange={e => setEditDoc({ ...editDoc, nombre_documento: e.target.value })}
+                            style={{ marginBottom: '0.5rem', width: '95%' }}
+                        />
+                        <select
+                            value={editDoc.categoria_id}
+                            onChange={e => setEditDoc({ ...editDoc, categoria_id: e.target.value })}
+                            style={{ marginBottom: '0.5rem', width: '100%' }}
+                        >
+                            <option value="">Seleccione categoría</option>
+                            {categorias.map(cat => (
+                                <option key={cat.id_categoria} value={cat.id_categoria}>{cat.categoria_nombre}</option>
+                            ))}
+                        </select>
+                        <select
+                            value={editDoc.extension}
+                            onChange={e => setEditDoc({ ...editDoc, extension: e.target.value })}
+                            style={{ marginBottom: '0.5rem', width: '100%' }}
+                        >
+                            {tiposUnicos.map(tipo => (
+                                <option key={tipo} value={tipo}>{tipo.toUpperCase()}</option>
+                            ))}
+                        </select>
+                        <button type="submit" style={{ background: '#28a745', color: '#fff', border: 'none', borderRadius: '4px', padding: '0.5rem 1rem' }}>Actualizar</button>
+                        <button type="button" onClick={() => setEditandoId(null)} style={{ marginLeft: '10px', background: '#6c757d', color: '#fff', border: 'none', borderRadius: '4px', padding: '0.5rem 1rem' }}>Cancelar</button>
+                    </form>
+                )}
+            </div>
             {mensaje && <p>{mensaje}</p>}
+            <div className="documentos-table-container">
             <table className="documentos-table">
                 <thead>
                     <tr>
@@ -202,7 +241,7 @@ function Documentos() {
                         <th>Descripción</th>
                         <th>Estado</th>
                         <th>Usuario</th>
-                        <th>Login</th>
+                        {/* <th>Login</th> */}
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -259,20 +298,20 @@ function Documentos() {
                                 <td>{doc.peso}</td>
                                 <td>{doc.fecha_hora}</td>
                                 <td>{doc.categoria_nombre || doc.id_categoria}</td>
-                                <td>{doc.categoria_descripcion || ''}</td>
+                                <td>{doc.categoria_descripcion || doc.id_categoria}</td>
                                 <td>{doc.estado || ''}</td>
                                 <td>{doc.nombre_usuario} {doc.apellido_usuario}</td>
-                                <td>{doc.usuario_login}</td>
+                                {/* <td>{doc.usuario_login}</td> */}
                                 <td className="acciones-columna">
                                     <button className="documentos-btn documentos-btn-eliminar" onClick={() => eliminarDocumento(doc.id_documento)}>Eliminar</button>
                                     <button className="documentos-btn documentos-btn-editar" onClick={() => iniciarEdicion(doc)}>Editar</button>
                                     <a
                                         className="documentos-btn documentos-btn-descargar"
-                                        href={`http://localhost:3000/api/documentos/${doc.id_documento}/download`}
+                                        href={`http://localhost:3000/uploads/${doc.ruta}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        Descargar / Ver
+                                        Descargar
                                     </a>
                                 </td>
                             </tr>
@@ -280,39 +319,8 @@ function Documentos() {
                     })}
                 </tbody>
             </table>
-            {editandoId && (
-                <form onSubmit={actualizarDocumento} style={{ marginTop: '2rem', background: '#f8f9fa', padding: '1rem', borderRadius: '8px' }}>
-                    <h3>Editar documento</h3>
-                    <input
-                        type="text"
-                        placeholder="Nombre"
-                        value={editDoc.nombre_documento}
-                        onChange={e => setEditDoc({ ...editDoc, nombre_documento: e.target.value })}
-                        style={{ marginBottom: '0.5rem', width: '100%' }}
-                    />
-                    <select
-                        value={editDoc.categoria_id}
-                        onChange={e => setEditDoc({ ...editDoc, categoria_id: e.target.value })}
-                        style={{ marginBottom: '0.5rem', width: '100%' }}
-                    >
-                        <option value="">Seleccione categoría</option>
-                        {categorias.map(cat => (
-                            <option key={cat.id_categoria} value={cat.id_categoria}>{cat.categoria_nombre}</option>
-                        ))}
-                    </select>
-                    <select
-                        value={editDoc.extension}
-                        onChange={e => setEditDoc({ ...editDoc, extension: e.target.value })}
-                        style={{ marginBottom: '0.5rem', width: '100%' }}
-                    >
-                        {tiposUnicos.map(tipo => (
-                            <option key={tipo} value={tipo}>{tipo.toUpperCase()}</option>
-                        ))}
-                    </select>
-                    <button type="submit" style={{ background: '#28a745', color: '#fff', border: 'none', borderRadius: '4px', padding: '0.5rem 1rem' }}>Actualizar</button>
-                    <button type="button" onClick={() => setEditandoId(null)} style={{ marginLeft: '10px', background: '#6c757d', color: '#fff', border: 'none', borderRadius: '4px', padding: '0.5rem 1rem' }}>Cancelar</button>
-                </form>
-            )}
+            </div>
+
         </div>
     );
 }

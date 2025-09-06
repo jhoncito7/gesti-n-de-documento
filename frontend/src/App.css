@@ -1,3 +1,40 @@
+/* Estadísticas - Página profesional */
+.estadistica-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  padding: 2rem 2.5rem;
+  margin: 0 auto;
+  max-width: 900px;
+}
+.estadistica-container h2 {
+  color: #007bff;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+.estadistica-graficos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  justify-content: center;
+  align-items: flex-start;
+}
+.estadistica-grafico {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 1.5rem 1rem 1rem 1rem;
+  margin-bottom: 2rem;
+}
+.estadistica-cargando {
+  color: #007bff;
+  font-size: 1.2rem;
+  margin-top: 2rem;
+}
 /* Login profesional */
 .login-container {
   display: flex;
@@ -15,8 +52,8 @@
   padding: 2rem 2.5rem;
   border-radius: 16px;
   box-shadow: 0 4px 24px rgba(0,0,0,0.10);
-  min-width: 340px;
-  min-height: 400px;
+  min-width: 400px;
+  min-height: 320px;
   text-align: center;
 }
 .login-box h2 {
@@ -64,7 +101,7 @@
 .documentos-table td.acciones-columna {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 5px;
   align-items: flex-start;
 }
 /* Formulario de registro */
@@ -83,8 +120,8 @@
 }
 
 .registro-form input {
-  width: 90%;
-  margin: 4px 0 0 10px;
+  width: 75%;
+  margin: 7px 45px;
   border: none;
   background: #f8f9fa;
   font-size: 1rem;
@@ -110,6 +147,7 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+  margin: 20px auto;
   /* font-size: 1rem; */
 
 }
@@ -120,16 +158,27 @@
 .registro-form h2 {
   color: #fff;
   margin-bottom: 20px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 /* Mejorar la tabla de documentos */
 .documentos-table th, .documentos-table td {
-  width: 450px;
+  width: auto;
   border: 1px solid #ddd;
-  padding: 0.75rem;
-  text-align: left;
+  padding: 10px;
+  text-align: center;
   vertical-align: bottom;
+}
+.documentos-table-container {
+  max-height: 420px;
+  overflow-y: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  margin-bottom: 2rem;
+}
+.documentos-table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
 .documentos-table th {

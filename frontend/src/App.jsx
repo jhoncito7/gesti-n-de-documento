@@ -4,10 +4,13 @@ import './App.css';
 import Documentos from './pages/Documentos.jsx';
 import Login from './pages/login.jsx';
 import Registro from './pages/Registro.jsx';
+import Estadistica from './pages/estadistica.jsx';
+
 
 function App() {
   const [autenticado, setAutenticado] = useState(false);
   const [mostrarRegistro, setMostrarRegistro] = useState(false);
+  const [pagina, setPagina] = useState('documentos');
 
   // Eliminar el token al recargar la página para forzar login
   useEffect(() => {
@@ -20,6 +23,12 @@ function App() {
     setAutenticado(false);
   };
 
+  const renderContenido = () => {
+    if (pagina === 'documentos') return <Documentos />;
+    if (pagina === 'estadistica') return <Estadistica />;
+    return null;
+  };
+
   return (
     <div>
       {!autenticado ? (
@@ -29,7 +38,6 @@ function App() {
               onRegister={() => setMostrarRegistro(false)}
               cambiarAVistaLogin={() => setMostrarRegistro(false)}
             />
-
           </>
         ) : (
           <>
@@ -40,13 +48,19 @@ function App() {
           </>
         )
       ) : (
+        //ESTILOS DE LOS BOTONES  
         <>
-          <button onClick={handleLogout} style={{ position: 'absolute', top: 20, right: 20, padding: '0.5rem 1rem', background: '#dc3545', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>Cerrar sesión</button>
-          <Documentos />
+          <nav style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '2rem', background: 'linear-gradient(90deg, #007bff 60%, #0056b3 100%)', padding: '1.2rem 0', marginBottom: '2rem', borderRadius: '0 0 16px 16px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+            <button onClick={() => setPagina('documentos')} style={{  background: pagina === 'documentos' ? '#fff' : '#007bff', color: pagina === 'documentos' ? '#007bff' : '#fff', border: 'none', borderRadius: '8px', padding: '8px 11px ', fontWeight: 'bold', fontSize: '1.1rem', cursor: 'pointer', boxShadow: pagina === 'documentos' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none', transition: 'all 0.2s' }}>Documentos</button>
+            <button onClick={() => setPagina('estadistica')} style={{  background: pagina === 'estadistica' ? '#fff' : '#007bff', color: pagina === 'estadistica' ? '#007bff' : '#fff', border: 'none', borderRadius: '8px', padding: '8px 11px', fontWeight: 'bold', fontSize: '1.1rem', cursor: 'pointer', boxShadow: pagina === 'estadistica' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none', transition: 'all 0.2s' }}>Estadísticas</button>
+            <button onClick={handleLogout} style={{ marginLeft: '35em', background: '#dc3545', color: '#fff', border: 'none', borderRadius: '8px', padding: '8px 11px', fontWeight: 'bold', fontSize: '1.1rem', cursor: 'pointer', transition: 'all 0.2s' }}>Cerrar sesión</button>
+          </nav>
+          <div style={{ maxWidth: 1200, margin: '0 19px', background: '#fff', borderRadius: 16, boxShadow: '0 4px 24px rgba(0,0,0,0.10)', padding: '2rem' }}>
+            {renderContenido()}
+          </div>
         </>
       )}
     </div>
   );
 }
-
 export default App;

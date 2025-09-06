@@ -1,4 +1,4 @@
-const db = require('./db'); // conexión a MySQL
+const db = require('../src/config/db');// conexión a MySQL
 const bcrypt = require('bcryptjs');
 
 // Obtener todos los usuarios

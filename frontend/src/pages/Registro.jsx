@@ -7,6 +7,7 @@ function Registro({ onRegister, cambiarAVistaLogin }) {
   const [usuario, setUsuario] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [verPassword, setVerPassword] = useState(false);
   const [mensaje, setMensaje] = useState('');
 
   const handleSubmit = async (e) => {
@@ -45,7 +46,7 @@ function Registro({ onRegister, cambiarAVistaLogin }) {
     <div className="registro-container">
       <div className="registro-box">
         <form onSubmit={handleSubmit} className="registro-form">
-          <h2>Registro</h2>
+        <h2>Registro</h2>
           <input
             type="text"
             placeholder="Nombre"
@@ -70,27 +71,35 @@ function Registro({ onRegister, cambiarAVistaLogin }) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           /><br />
-          <input
-            type="password"
-            placeholder="Contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          /><br />
+          <div style={{ position: 'relative' }}>
+            <input
+              type={verPassword ? 'text' : 'password'}
+              placeholder="Contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              style={{ width: '75%' }}
+            />
+            <span
+              onClick={() => setVerPassword(v => !v)}
+              style={{ position: 'absolute', right:60, top: 15, cursor: 'pointer', userSelect: 'none' }}
+              title={verPassword ? 'Ocultar' : 'Mostrar'}
+            >
+              {verPassword ? '🙈' : '👁️'}
+            </span>
+          </div>
           <button type="submit">Registrarse</button>
 
 
-        </form>
-
         {/*  Mostrar mensaje */}
         {mensaje && (
-          <p style={{ color: mensaje.includes('correctamente') ? 'green' : 'red', marginTop: '10px' }}>
+          <p style={{marginTop: '1rem', color: mensaje.includes('correctamente') ? 'green' : 'red' }}>
             {mensaje}
           </p>
         )}
 
         {/* Botón para cambiar a login */}
-        {<p style={{ marginTop: '1rem' }}>}
-          ¿Ya tienes cuenta?{' '}
+        <div style={{ marginBottom:'0', justifyContent: 'center', alignItems: 'left', gap: '0.2rem', marginTop: '5px' }}>
+          <span>¿Ya tienes cuenta?</span>
           <button
             onClick={cambiarAVistaLogin}
             style={{
@@ -99,13 +108,17 @@ function Registro({ onRegister, cambiarAVistaLogin }) {
               border: 'none',
               cursor: 'pointer',
               textDecoration: 'underline',
-              padding: 0
+              padding: 0,
+             
             }}
           >
             Inicia sesión
           </button>
-        </p>
+        </div>
+        </form>
+
       </div>
+      
     </div>
   );
 }

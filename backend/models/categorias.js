@@ -1,4 +1,4 @@
-const db = require('./db');
+const db = require('../src/config/db');
 
 // Obtener todas las categorías
 const getAllCategorias = (callback) => {
@@ -7,6 +7,7 @@ const getAllCategorias = (callback) => {
     callback(null, results);
   });
 };
+
 
 // Crear una nueva categoría
 const createCategoria = (nombre, descripcion, estado = 'activa', callback) => {
