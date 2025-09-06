@@ -12,7 +12,7 @@ function Registro({ onRegister, cambiarAVistaLogin }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     // Validar campos vacíos
     if (!nombre || !apellido || !usuario || !email || !password) {
       setMensaje('Por favor, completa todos los campos.');

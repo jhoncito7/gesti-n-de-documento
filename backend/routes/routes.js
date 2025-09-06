@@ -8,34 +8,10 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = 'dfaFfDFdfDF_f_dF_df_aF_a_FafASF';
 
-// ===========================
-// ESTADÍSTICAS AVANZADAS
-// ===========================
-router.get('/estadisticas-avanzadas', (req, res) => {
-  const queries = [
-    // Documentos por usuario
-    `SELECT u.nombre AS usuario, COUNT(d.id_documento) AS total
-     FROM usuarios u
-     LEFT JOIN documentos d ON d.id_usuario = u.id_usuario
-     GROUP BY u.id_usuario` ,
-    // Documentos por extensión
-    `SELECT extension, COUNT(*) AS total FROM documentos GROUP BY extension`,
-    // Documentos por hora
-    `SELECT HOUR(fecha_hora) AS hora, COUNT(*) AS total FROM documentos GROUP BY hora ORDER BY hora`
-  ];
-  db.query(queries.join(';'), (err, results) => {
-    if (err) return res.status(500).json({ message: 'Error al obtener estadísticas avanzadas', error: err });
-    res.json({
-      porUsuario: results[0],
-      porExtension: results[1],
-      porHora: results[2]
-    });
-  });
-});
 
 // ===========================
 // REGISTRO DE USUARIO
-// ===========================
+
 router.post('/register', async (req, res) => {
   const { nombre, apellido, usuario, email, password } = req.body;
   if (!nombre || !apellido || !usuario || !email || !password) {
@@ -62,9 +38,75 @@ router.post('/register', async (req, res) => {
   }
 });
 
+
+
+// ===========================
+// LOGIN
+
+router.post('/login', (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email y contraseña son obligatorios' });
+  }
+
+  db.query('SELECT * FROM usuarios WHERE email = ?', [email], async (err, results) => {
+    if (err) return res.status(500).json({ message: 'Error en la base de datos', error: err });
+    if (results.length === 0) return res.status(401).json({ message: 'Usuario no encontrado' });
+
+    const usuario = results[0];
+    const esValida = await bcrypt.compare(password, usuario.password);
+    if (!esValida) return res.status(401).json({ message: 'Contraseña incorrecta' });
+
+    const token = jwt.sign(
+      { id_usuario: usuario.id_usuario, nombre: usuario.nombre, email: usuario.email },
+      JWT_SECRET,
+      { expiresIn: '4h' }
+    );
+
+    res.json({
+      message: 'Login exitoso',
+      token,
+      usuario: {
+        id_usuario: usuario.id_usuario,
+        nombre: usuario.nombre,
+        apellido: usuario.apellido,
+        email: usuario.email
+      }
+    });
+  });
+});
+
+
+
+// ===========================
+// ESTADÍSTICAS AVANZADAS
+
+router.get('/estadisticas-avanzadas', (req, res) => {
+  const queries = [
+    // Documentos por usuario
+    `SELECT u.nombre AS usuario, COUNT(d.id_documento) AS total
+     FROM usuarios u
+     LEFT JOIN documentos d ON d.id_usuario = u.id_usuario
+     GROUP BY u.id_usuario` ,
+    // Documentos por extensión
+    `SELECT extension, COUNT(*) AS total FROM documentos GROUP BY extension`,
+    // Documentos por hora
+    `SELECT HOUR(fecha_hora) AS hora, COUNT(*) AS total FROM documentos GROUP BY hora ORDER BY hora`
+  ];
+  db.query(queries.join(';'), (err, results) => {
+    if (err) return res.status(500).json({ message: 'Error al obtener estadísticas avanzadas', error: err });
+    res.json({
+      porUsuario: results[0],
+      porExtension: results[1],
+      porHora: results[2]
+    });
+  });
+});
+
+
 // ===========================
 // CONFIGURACIÓN DE UPLOADS
-// ===========================
+
 const uploadDir = path.join(__dirname, '../uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
@@ -99,7 +141,11 @@ router.get('/usuarios', (req, res) => {
   });
 });
 
-//-------------
+
+
+// ===========================
+// ESTADÍSTICAS BÁSICAS
+
 router.get('/lista', (req, res) => {
   db.query(
     `SELECT c.categoria_nombre AS categoria, COUNT(d.id_documento) AS total
@@ -114,45 +160,10 @@ router.get('/lista', (req, res) => {
     }
   );
 });
-// ===========================
-// LOGIN
-// ===========================
-router.post('/login', (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ message: 'Email y contraseña son obligatorios' });
-  }
-
-  db.query('SELECT * FROM usuarios WHERE email = ?', [email], async (err, results) => {
-    if (err) return res.status(500).json({ message: 'Error en la base de datos', error: err });
-    if (results.length === 0) return res.status(401).json({ message: 'Usuario no encontrado' });
-
-    const usuario = results[0];
-    const esValida = await bcrypt.compare(password, usuario.password);
-    if (!esValida) return res.status(401).json({ message: 'Contraseña incorrecta' });
-
-    const token = jwt.sign(
-      { id_usuario: usuario.id_usuario, nombre: usuario.nombre, email: usuario.email },
-      JWT_SECRET,
-      { expiresIn: '4h' }
-    );
-
-    res.json({
-      message: 'Login exitoso',
-      token,
-      usuario: {
-        id_usuario: usuario.id_usuario,
-        nombre: usuario.nombre,
-        apellido: usuario.apellido,
-        email: usuario.email
-      }
-    });
-  });
-});
 
 // ===========================
 // SUBIR DOCUMENTO
-// ===========================
+
 router.post('/documentos/uploads', upload.single('archivo'), (req, res) => {
   const { categoria_id, usuario_id } = req.body;
   const archivo = req.file;
@@ -181,7 +192,7 @@ router.post('/documentos/uploads', upload.single('archivo'), (req, res) => {
 
 // ===========================
 // OBTENER TODOS LOS DOCUMENTOS
-// ===========================
+
 router.get('/documentos', (req, res) => {
   db.query(
     `SELECT d.id_documento, d.nombre_documento, d.ruta, d.extension, d.peso, d.fecha_hora,
@@ -199,7 +210,7 @@ router.get('/documentos', (req, res) => {
 
 // ===========================
 // ACTUALIZAR DOCUMENTO
-// ===========================
+
 router.put('/documentos/:id', (req, res) => {
   const id = req.params.id;
   const { nombre_documento, categoria_id, extension } = req.body;
@@ -215,7 +226,7 @@ router.put('/documentos/:id', (req, res) => {
 
 // ===========================
 // OBTENER CATEGORÍAS POR USUARIO
-// ===========================
+
 router.get('/categorias/usuario/:id_usuario', (req, res) => {
   const id_usuario = req.params.id_usuario;
   db.query(
@@ -230,7 +241,7 @@ router.get('/categorias/usuario/:id_usuario', (req, res) => {
 
 // ===========================
 // OBTENER DOCUMENTOS DE UN USUARIO
-// ===========================
+
 router.get('/documentos/usuario/:id_usuario', (req, res) => {
   const id_usuario = req.params.id_usuario;
   db.query(
@@ -250,7 +261,7 @@ router.get('/documentos/usuario/:id_usuario', (req, res) => {
 
 // ===========================
 // LISTAR ARCHIVOS FÍSICOS EN /uploads
-// ===========================
+
 router.get('/uploads', (req, res) => {
   fs.readdir(uploadDir, (err, files) => {
     if (err) return res.status(500).json({ message: 'Error al leer la carpeta uploads', error: err });
@@ -270,15 +281,15 @@ router.get('/uploads', (req, res) => {
 
 // ===========================
 // DESCARGAR ARCHIVO
-// ===========================
+
 router.get('/uploads/:filename', (req, res) => {
   const filePath = path.join(uploadDir, req.params.filename);
   res.download(filePath);
 });
 
-// ===========================
+
 // ELIMINAR DOCUMENTO
-// ===========================
+
 router.delete('/documentos/:id', (req, res) => {
   const id = req.params.id;
   db.query('SELECT ruta FROM documentos WHERE id_documento = ?', [id], (err, results) => {

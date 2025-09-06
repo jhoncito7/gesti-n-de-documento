@@ -13,7 +13,10 @@ function Documentos() {
     const [editDoc, setEditDoc] = useState({ nombre_documento: '', categoria_id: '', extension: '' });
     const token = localStorage.getItem('token');
     const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+
+    //=========================
     // Obtener usuario logueado del token
+
     let usuarioLogueado = null;
     if (token) {
         try {
@@ -61,7 +64,10 @@ function Documentos() {
             setMensaje('Selecciona un archivo');
             return;
         }
+
+        //=========================
         // Usar usuario logueado
+
         const usuario_id = usuarioLogueado?.id_usuario;
         if (!usuario_id) {
             setMensaje('No se pudo obtener el usuario logueado');
@@ -122,7 +128,7 @@ function Documentos() {
     const documentosFiltrados = tipoFiltro
         ? documentos.filter(doc => doc.extension === tipoFiltro)
         : documentos;
-
+    //=========================
     // Obtener tipos únicos de archivos
     const tiposUnicos = Array.from(new Set(documentos.map(doc => doc.extension))).filter(Boolean);
 

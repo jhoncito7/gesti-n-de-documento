@@ -1,4 +1,3 @@
-
 const db = require('../src/config/db');
 
 // Usuarios
