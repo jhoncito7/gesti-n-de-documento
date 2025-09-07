@@ -25,7 +25,7 @@ function Login({ onLogin, cambiarAVistaRegistro }) {
     };
 
     return (
-        <div className="login-container">
+        <div className="login-container" >
             <div className="login-box">
                 <h2>Iniciar sesión </h2>
                 <form onSubmit={handleSubmit}>
@@ -56,8 +56,28 @@ function Login({ onLogin, cambiarAVistaRegistro }) {
                 {mensaje && <p className={mensaje.includes('exitoso') ? 'success' : 'error'}>{mensaje}</p>}
 
                 {/* Botón para ir a Registro */}
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', marginTop: '0.2rem' }}>
-                    <span style={{ fontSize: '1rem', marginBottom: '0px' }}>¿No tienes cuenta?</span>
+                <div style={{ 
+                    padding: '0px',
+                    margin: '20px 0 0 45px', 
+                    textAlign: 'center',
+                    display: 'inline-flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '350px',
+                                     
+                                       
+                    }}>
+                    <span style={{ 
+                        padding: '0px', 
+                        margin: '0px',
+                        display: 'inline-flex',
+                        textAlign: 'center',
+                        padding: '1px',
+                        textAlign: 'right',
+                        justifyContent: 'center',
+                        color:'#f0e9e9ff',
+                        }}>¿No tienes cuenta?
+                        </span>
                     <button
                         onClick={() => {
                             setEmail('');
@@ -65,7 +85,16 @@ function Login({ onLogin, cambiarAVistaRegistro }) {
                             setMensaje('');
                             cambiarAVistaRegistro();
                         }}
-                        style={{ color: '#007bff', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', padding: 0, fontSize: '1rem', marginTop: '0px' }}
+                        style={{ 
+                            color: '#007bff', 
+                            background: 'none', 
+                            border: 'none', 
+                            cursor: 'pointer', 
+                            textDecoration: 'underline', 
+                            display: 'inline-flex',
+                            padding: '0px',
+                            margin: '0px' 
+                        }}
                     >
                         Regístrate aquí
                     </button>

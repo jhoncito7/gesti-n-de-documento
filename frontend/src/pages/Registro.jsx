@@ -98,7 +98,17 @@ function Registro({ onRegister, cambiarAVistaLogin }) {
         )}
 
         {/* Botón para cambiar a login */}
-        <div style={{ marginBottom:'0', justifyContent: 'center', alignItems: 'left', gap: '0.2rem', marginTop: '5px' }}>
+        <div style={{ 
+          padding: '0px', 
+          marginBottom:'0', 
+          justifyContent: 'center', 
+          color: '#fff', 
+          alignItems: 'left',
+          /*gap: '0.1rem', 
+          /*marginTop: '5px' */ 
+          
+          }}>
+            
           <span>¿Ya tienes cuenta?</span>
           <button
             onClick={cambiarAVistaLogin}
@@ -108,8 +118,10 @@ function Registro({ onRegister, cambiarAVistaLogin }) {
               border: 'none',
               cursor: 'pointer',
               textDecoration: 'underline',
-              padding: 0,
-             
+              margin: '0px',
+              padding: '0px',
+              display: 'inline',
+              
             }}
           >
             Inicia sesión

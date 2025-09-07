@@ -162,9 +162,10 @@ function Documentos() {
                     <option value="tiff">TIFF</option>
                 </select>
             </label>
+            {/*Formulario para Subir  Nuevo Archivos Estilos */}
             <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start', marginTop: '1rem', marginBottom: '2rem' }}>
-                <form onSubmit={agregarDocumento} style={{ background: '#f8f9fa', padding: '1rem', borderRadius: '8px', maxWidth: '400px', minWidth: '320px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-                    <h3 style={{ marginBottom: '1rem', color: '#007bff' }}>Subir nuevo archivo</h3>
+                <form onSubmit={agregarDocumento} style={{ background: '#ecf3edff', padding: '1rem', borderRadius: '8px', maxWidth: '400px', minWidth: '420px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+                    <h3 style={{ marginBottom: '1rem', color: '#0e1011ff' }}>Subir nuevo archivo</h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                         <select
                             value={nuevoDoc.categoria_id}
@@ -199,20 +200,21 @@ function Documentos() {
                         <button type="submit" style={{ background: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', padding: '0.5rem 1rem', fontWeight: 'bold', cursor: 'pointer' }}>Subir archivo</button>
                     </div>
                 </form>
+                {/* Formulario de Editar */}
                 {editandoId && (
-                    <form onSubmit={actualizarDocumento} style={{ background: '#f8f9fa', padding: '1rem', borderRadius: '8px', minWidth: '320px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+                    <form onSubmit={actualizarDocumento} style={{ background: '#ecf3edff', padding: '1rem', borderRadius: '8px',  maxWidth: '620px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
                         <h3>Editar documento</h3>
                         <input
                             type="text"
                             placeholder="Nombre"
                             value={editDoc.nombre_documento}
                             onChange={e => setEditDoc({ ...editDoc, nombre_documento: e.target.value })}
-                            style={{ marginBottom: '0.5rem', width: '95%' }}
+                            style={{ marginBottom: '0.5rem', width: '80%' }}
                         />
                         <select
                             value={editDoc.categoria_id}
                             onChange={e => setEditDoc({ ...editDoc, categoria_id: e.target.value })}
-                            style={{ marginBottom: '0.5rem', width: '100%' }}
+                            style={{ marginBottom: '0.5rem', width: '81%' }}
                         >
                             <option value="">Seleccione categoría</option>
                             {categorias.map(cat => (
@@ -222,13 +224,13 @@ function Documentos() {
                         <select
                             value={editDoc.extension}
                             onChange={e => setEditDoc({ ...editDoc, extension: e.target.value })}
-                            style={{ marginBottom: '0.5rem', width: '100%' }}
+                            style={{ marginBottom: '0.6rem', width: '81%' }}
                         >
                             {tiposUnicos.map(tipo => (
                                 <option key={tipo} value={tipo}>{tipo.toUpperCase()}</option>
                             ))}
                         </select>
-                        <button type="submit" style={{ background: '#28a745', color: '#fff', border: 'none', borderRadius: '4px', padding: '0.5rem 1rem' }}>Actualizar</button>
+                        <button type="submit" style={{ background: '#28a745', color: '#fff', border: 'none', borderRadius: '4px', padding: '0.5rem 2rem' }}>Actualizar</button>
                         <button type="button" onClick={() => setEditandoId(null)} style={{ marginLeft: '10px', background: '#6c757d', color: '#fff', border: 'none', borderRadius: '4px', padding: '0.5rem 1rem' }}>Cancelar</button>
                     </form>
                 )}

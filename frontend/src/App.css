@@ -37,12 +37,14 @@
 }
 /* Login profesional */
 .login-container {
-  display: flex;
+  background-image: url('https://i.pinimg.com/1200x/b3/27/56/b32756693b9c0d6139d29708db3fb1d6.jpg');
+  background-size: cover;
+  /* display: flex; */
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: rgba(128, 163, 233, 0.8);
   border-radius: 16px;
+  /* background-color: rgba(108, 127, 165, 0.8); */
   /* min-height: 100vh; */
   /* background: linear-gradient(135deg, #ece9e6 0%, #ffffff 100%); */
 }
@@ -53,18 +55,18 @@
   border-radius: 16px;
   box-shadow: 0 4px 24px rgba(0,0,0,0.10);
   min-width: 400px;
-  min-height: 320px;
+  min-height: 420px;
   text-align: center;
 }
 .login-box h2 {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.9rem;
   color: #f0f2f3;
   font-weight: 500;
 }
 .login-box input {
   width: 70%;
-  padding: 0.85rem;
-  margin-bottom: 1rem;
+  padding: 0.8rem;
+  margin-bottom: 2rem;
   border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 1rem;
@@ -108,30 +110,31 @@
 .registro-form {
   width: 450px;
   height: 550px;
-  margin: 7px;
-  top: 30px;
-  background: rgba(19, 97, 211, 0.71);
+  background-image: url('https://i.pinimg.com/1200x/b3/27/56/b32756693b9c0d6139d29708db3fb1d6.jpg');
+  background-size: cover;
+  margin: 5px;
+  top: 10px;
+  /* background: rgba(196, 202, 211, 0.71); */
   padding: 10px;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  display: flex;
   flex-direction: column;
   /* gap: 1; */
 }
 
 .registro-form input {
   width: 75%;
-  margin: 7px 45px;
+  margin: 8px 45px;
   border: none;
   background: #f8f9fa;
   font-size: 1rem;
-  padding: 10px;
-  /* margin-top: 10px 0; */
-  border-radius: 5px;
+  padding: 10px 10px;
+  border-radius: 10px;
   align-items: center;
   border: 1px solid #ccc;
   flex-direction: column;
   align-items: center;
+  /* margin-top: 10px 0; */
   /* font-size: 1rem; */
 }
 
@@ -239,9 +242,9 @@
   color: #fff;
 }
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  max-width: 1300px;
+  margin: 2px auto;
+  padding: 0.3rem;
   text-align: center;
 }
 
