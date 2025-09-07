@@ -135,6 +135,87 @@ El frontend estará disponible en `http://localhost:5173` (o el puerto que indiq
 
 ---
 
+
+## 8. Estructura de Carpetas
+
+```
+prueba/
+├── backend/
+│   ├── index.js
+│   ├── package.json
+│   ├── routes/
+│   │   └── routes.js
+│   ├── models/
+│   ├── controllers/
+│   ├── src/
+│   │   └── config/db.js
+│   └── uploads/
+├── frontend/
+│   ├── index.html
+│   ├── package.json
+│   ├── vite.config.js
+│   ├── src/
+│   │   ├── App.jsx
+│   │   ├── pages/
+│   │   │   ├── Documentos.jsx
+│   │   │   ├── Estadistica.jsx
+│   │   │   ├── EstadisticaAvanzada.jsx
+│   │   │   ├── login.jsx
+│   │   │   └── Registro.jsx
+│   │   └── assets/
+│   └── public/
+└── README.md
+```
+
+## 9. Ejemplos de Endpoints
+
+### Autenticación
+- `POST /api/register`
+  - Crea un nuevo usuario.
+  - Body ejemplo:
+    ```json
+    {
+      "nombre": "Juan",
+      "apellido": "Pérez",
+      "usuario": "juanp",
+      "email": "juan@mail.com",
+      "password": "123456"
+    }
+    ```
+
+- `POST /api/login`
+  - Inicia sesión y devuelve un token JWT.
+  - Body ejemplo:
+    ```json
+    {
+      "email": "juan@mail.com",
+      "password": "123456"
+    }
+    ```
+
+### Documentos
+- `GET /api/documentos` — Lista todos los documentos.
+- `POST /api/documentos/uploads` — Sube un documento (form-data: archivo, categoria_id, usuario_id).
+- `PUT /api/documentos/:id` — Edita un documento.
+  - Body ejemplo:
+    ```json
+    {
+      "nombre_documento": "nuevo.docx",
+      "categoria_id": 1,
+      "extension": "docx"
+    }
+    ```
+- `DELETE /api/documentos/:id` — Elimina un documento.
+
+### Estadísticas
+- `GET /api/estadisticas-avanzadas` — Devuelve estadísticas agrupadas por usuario, extensión y hora.
+
+### Otros
+- `GET /api/categorias` — Lista todas las categorías.
+- `GET /api/usuarios` — Lista todos los usuarios.
+
+---
+
 ## 7. Notas adicionales
 - Los archivos subidos se guardan en la carpeta `backend/uploads`.
 - Si cambias el usuario o contraseña de MySQL, actualízalo en `src/config/db.js`.
